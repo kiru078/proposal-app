@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String     @id @default(cuid())
+  name        String?
+  email       String     @unique
+  password    String
+  companyName String?
+  phone       String?
+  address     String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  proposals   Proposal[]
+
+  @@map("users")
+}
+
+model Proposal {
+  id            String         @id @default(cuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  clientName    String
+  clientEmail   String
+  clientCompany String?
+  clientPhone   String?
+
+  title         String
+  coverLetter   String?
+  notes         String?
+  terms         String?
+
+  taxRate       Float          @default(0)
+
+  status        String         @default("DRAFT")
+  validUntil    DateTime?
+  publicToken   String         @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  sentAt        DateTime?
+  viewedAt      DateTime?
+
+  items         ProposalItem[]
+
+  @@index([userId])
+  @@index([publicToken])
+  @@map("proposals")
+}
+
+model ProposalItem {
+  id          String   @id @default(cuid())
+  proposalId  String
+  proposal    Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  description String
+  quantity    Float    @default(1)
+  unitPrice   Float    @default(0)
+  order       Int      @default(0)
+
+  @@index([proposalId])
+  @@map("proposal_items")
+}
