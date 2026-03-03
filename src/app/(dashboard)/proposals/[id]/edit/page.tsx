@@ -67,7 +67,7 @@ export default async function EditProposalPage({ params }: PageProps) {
       <ProposalForm
         proposalId={params.id}
         defaultValues={defaultValues}
-        senderInfo={user || undefined}
+        senderInfo={user ? { ...user, name: user.name ?? "" } : undefined}
       />
     </div>
   );
