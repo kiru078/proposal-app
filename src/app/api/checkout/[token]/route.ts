@@ -34,6 +34,7 @@ export async function POST(_req: Request, { params }: RouteParams) {
   }
 
   const baseUrl = (process.env.NEXTAUTH_URL || "http://localhost:3000").replace(/\/$/, "");
+  console.log("[CHECKOUT] baseUrl:", baseUrl);
 
   let session;
   try {
