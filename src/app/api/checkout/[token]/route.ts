@@ -33,7 +33,7 @@ export async function POST(_req: Request, { params }: RouteParams) {
     return NextResponse.json({ error: "Valor mínimo é R$ 0,50" }, { status: 400 });
   }
 
-  const baseUrl = (process.env.NEXTAUTH_URL || "https://proposal-app-silk-omega.vercel.app").replace(/\/$/, "");
+  const baseUrl = (process.env.NEXTAUTH_URL?.trim() || "https://proposal-app-silk-omega.vercel.app").replace(/\/$/, "");
 
   let session;
   try {
