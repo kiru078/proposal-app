@@ -39,12 +39,17 @@ export default async function EditProposalPage({ params }: PageProps) {
     validUntil: proposal.validUntil
       ? new Date(proposal.validUntil).toISOString().split("T")[0]
       : undefined,
+    template: (proposal.template as any) || "modern",
+    enablePayment: proposal.enablePayment,
+    proposalType: proposal.proposalType || undefined,
     items: proposal.items.map((item) => ({
       id: item.id,
       description: item.description,
       quantity: item.quantity,
       unitPrice: item.unitPrice,
       order: item.order,
+      itemType: (item.itemType as any) || "fixed",
+      percentageLabel: item.percentageLabel || undefined,
     })),
   };
 

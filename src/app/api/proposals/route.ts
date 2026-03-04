@@ -57,12 +57,17 @@ export async function POST(req: Request) {
         taxRate: data.taxRate,
         validUntil: data.validUntil ? new Date(data.validUntil) : null,
         publicToken: nanoid(21),
+        template: data.template,
+        enablePayment: data.enablePayment,
+        proposalType: data.proposalType,
         items: {
           create: data.items.map((item, index) => ({
             description: item.description,
             quantity: item.quantity,
             unitPrice: item.unitPrice,
             order: index,
+            itemType: item.itemType,
+            percentageLabel: item.percentageLabel,
           })),
         },
       },

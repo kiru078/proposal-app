@@ -6,6 +6,8 @@ export const proposalItemSchema = z.object({
   quantity: z.coerce.number().positive("Quantidade deve ser positiva"),
   unitPrice: z.coerce.number().min(0, "Preço não pode ser negativo"),
   order: z.number().int().default(0),
+  itemType: z.enum(["fixed", "percentage"]).default("fixed"),
+  percentageLabel: z.string().optional(),
 });
 
 export const proposalFormSchema = z.object({
@@ -21,6 +23,10 @@ export const proposalFormSchema = z.object({
 
   taxRate: z.coerce.number().min(0).max(100).default(0),
   validUntil: z.string().optional(),
+
+  template: z.enum(["modern", "classic", "minimal", "corporate"]).default("modern"),
+  enablePayment: z.boolean().default(true),
+  proposalType: z.string().optional(),
 
   items: z
     .array(proposalItemSchema)

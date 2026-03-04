@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { proposalFormSchema, ProposalFormValues } from "@/lib/validations/proposal";
 import { computeTotals, formatCurrency } from "@/lib/utils";
@@ -12,8 +12,89 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { Plus, Trash2, Loader2, Save } from "lucide-react";
+import { Plus, Trash2, Loader2, Save, CreditCard, Percent, DollarSign } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const PROPOSAL_TYPES = [
+  "Dentista / Clínica Odontológica",
+  "Corretor de Imóveis",
+  "Advogado / Escritório Jurídico",
+  "Agência de Marketing / Freelancer",
+  "Desenvolvedor / TI",
+  "Arquiteto / Designer de Interiores",
+  "Consultor de Negócios",
+  "Médico / Clínica",
+  "Educação / Coaching",
+  "Outra",
+];
+
+const TEMPLATES = [
+  {
+    id: "modern",
+    name: "Moderno",
+    description: "Violeta vibrante",
+    preview: (
+      <div className="w-full h-16 rounded overflow-hidden">
+        <div className="h-8 bg-gradient-to-r from-violet-700 to-violet-800" />
+        <div className="h-8 bg-white p-1 space-y-1">
+          <div className="h-1.5 bg-slate-200 rounded w-3/4" />
+          <div className="h-1.5 bg-slate-100 rounded w-1/2" />
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "classic",
+    name: "Clássico",
+    description: "Preto e branco",
+    preview: (
+      <div className="w-full h-16 rounded overflow-hidden">
+        <div className="h-8 bg-gray-900" />
+        <div className="h-8 bg-white p-1 space-y-1">
+          <div className="h-1.5 bg-gray-200 rounded w-3/4" />
+          <div className="h-1.5 bg-gray-100 rounded w-1/2" />
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "minimal",
+    name: "Minimalista",
+    description: "Clean e elegante",
+    preview: (
+      <div className="w-full h-16 rounded overflow-hidden border border-gray-100">
+        <div className="h-1 bg-emerald-500" />
+        <div className="h-15 bg-white p-2 space-y-1.5">
+          <div className="h-2 bg-gray-900 rounded w-1/3" />
+          <div className="h-1.5 bg-gray-200 rounded w-2/3" />
+          <div className="h-1 bg-gray-100 rounded w-1/2" />
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "corporate",
+    name: "Corporativo",
+    description: "Azul profissional",
+    preview: (
+      <div className="w-full h-16 rounded overflow-hidden">
+        <div className="h-8" style={{ backgroundColor: "#1e3a5f" }} />
+        <div className="h-8 bg-white p-1 space-y-1">
+          <div className="h-1.5 rounded w-3/4" style={{ backgroundColor: "#e2e8f0" }} />
+          <div className="h-1.5 rounded w-1/2" style={{ backgroundColor: "#eff6ff" }} />
+        </div>
+      </div>
+    ),
+  },
+];
 
 interface ProposalFormProps {
   proposalId?: string;
@@ -37,26 +118,29 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
     control,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<ProposalFormValues>({
     resolver: zodResolver(proposalFormSchema),
     defaultValues: {
       taxRate: 0,
-      items: [{ description: "", quantity: 1, unitPrice: 0, order: 0 }],
+      template: "modern",
+      enablePayment: true,
+      items: [{ description: "", quantity: 1, unitPrice: 0, order: 0, itemType: "fixed" }],
       ...defaultValues,
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "items",
-  });
+  const { fields, append, remove } = useFieldArray({ control, name: "items" });
 
   const watchedItems = watch("items");
   const watchedTaxRate = watch("taxRate");
+  const watchedTemplate = watch("template");
+  const watchedEnablePayment = watch("enablePayment");
 
+  const fixedItems = (watchedItems || []).filter((i) => i.itemType !== "percentage");
   const totals = computeTotals(
-    (watchedItems || []).map((item) => ({
+    fixedItems.map((item) => ({
       quantity: Number(item.quantity) || 0,
       unitPrice: Number(item.unitPrice) || 0,
     })),
@@ -83,17 +167,11 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
     setLoading(false);
 
     if (!res.ok) {
-      toast({
-        title: "Erro ao salvar proposta",
-        description: result.error,
-        variant: "destructive",
-      });
+      toast({ title: "Erro ao salvar proposta", description: result.error, variant: "destructive" });
       return;
     }
 
-    toast({
-      title: isEditing ? "Proposta atualizada!" : "Proposta criada!",
-    });
+    toast({ title: isEditing ? "Proposta atualizada!" : "Proposta criada!" });
     router.push(`/proposals/${result.id}`);
   };
 
@@ -117,6 +195,95 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
         </Card>
       )}
 
+      {/* Template Selector */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Template da Proposta</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {TEMPLATES.map((tmpl) => (
+              <button
+                key={tmpl.id}
+                type="button"
+                onClick={() => setValue("template", tmpl.id as any)}
+                className={cn(
+                  "rounded-lg border-2 p-3 text-left transition-all hover:border-violet-400",
+                  watchedTemplate === tmpl.id
+                    ? "border-violet-600 bg-violet-50"
+                    : "border-slate-200"
+                )}
+              >
+                {tmpl.preview}
+                <p className="mt-2 text-sm font-semibold text-slate-800">{tmpl.name}</p>
+                <p className="text-xs text-slate-500">{tmpl.description}</p>
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Proposal Type + Payment Toggle */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Configurações</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Proposal Type */}
+          <div className="space-y-2">
+            <Label>Tipo de proposta</Label>
+            <Controller
+              control={control}
+              name="proposalType"
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value || ""}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o tipo de proposta..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PROPOSAL_TYPES.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+
+          {/* Payment Toggle */}
+          <div className="flex items-center justify-between rounded-lg border border-slate-200 p-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-violet-100 rounded-md p-2">
+                <CreditCard className="h-4 w-4 text-violet-600" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-800">Pagamento online</p>
+                <p className="text-xs text-slate-500">
+                  Permite que o cliente pague ao aceitar a proposta
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setValue("enablePayment", !watchedEnablePayment)}
+              className={cn(
+                "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+                watchedEnablePayment ? "bg-violet-600" : "bg-slate-300"
+              )}
+            >
+              <span
+                className={cn(
+                  "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                  watchedEnablePayment ? "translate-x-6" : "translate-x-1"
+                )}
+              />
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Client Information */}
       <Card>
         <CardHeader>
@@ -125,42 +292,25 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="clientName">Nome do cliente *</Label>
-            <Input
-              id="clientName"
-              placeholder="João Silva"
-              {...register("clientName")}
-            />
+            <Input id="clientName" placeholder="João Silva" {...register("clientName")} />
             {errors.clientName && (
               <p className="text-sm text-destructive">{errors.clientName.message}</p>
             )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="clientEmail">Email do cliente *</Label>
-            <Input
-              id="clientEmail"
-              type="email"
-              placeholder="joao@empresa.com"
-              {...register("clientEmail")}
-            />
+            <Input id="clientEmail" type="email" placeholder="joao@empresa.com" {...register("clientEmail")} />
             {errors.clientEmail && (
               <p className="text-sm text-destructive">{errors.clientEmail.message}</p>
             )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="clientCompany">Empresa</Label>
-            <Input
-              id="clientCompany"
-              placeholder="Empresa do Cliente"
-              {...register("clientCompany")}
-            />
+            <Input id="clientCompany" placeholder="Empresa do Cliente" {...register("clientCompany")} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="clientPhone">Telefone</Label>
-            <Input
-              id="clientPhone"
-              placeholder="(11) 99999-9999"
-              {...register("clientPhone")}
-            />
+            <Input id="clientPhone" placeholder="(11) 99999-9999" {...register("clientPhone")} />
           </div>
         </CardContent>
       </Card>
@@ -174,22 +324,14 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="title">Título da proposta *</Label>
-              <Input
-                id="title"
-                placeholder="Proposta de Desenvolvimento Web"
-                {...register("title")}
-              />
+              <Input id="title" placeholder="Proposta de Desenvolvimento Web" {...register("title")} />
               {errors.title && (
                 <p className="text-sm text-destructive">{errors.title.message}</p>
               )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="validUntil">Válida até</Label>
-              <Input
-                id="validUntil"
-                type="date"
-                {...register("validUntil")}
-              />
+              <Input id="validUntil" type="date" {...register("validUntil")} />
             </div>
           </div>
           <div className="space-y-2">
@@ -210,68 +352,134 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
           <CardTitle className="text-base">Itens da Proposta</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Header */}
-          <div className="hidden md:grid grid-cols-12 gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider px-1">
-            <div className="col-span-6">Descrição</div>
-            <div className="col-span-2 text-right">Qtd</div>
-            <div className="col-span-3 text-right">Preço unit.</div>
-            <div className="col-span-1" />
-          </div>
+          {fields.map((field, index) => {
+            const itemType = watchedItems?.[index]?.itemType || "fixed";
+            const isPercentage = itemType === "percentage";
 
-          {fields.map((field, index) => (
-            <div key={field.id} className="grid grid-cols-12 gap-2 items-start">
-              <div className="col-span-12 md:col-span-6">
-                <Input
-                  placeholder="Descrição do serviço ou produto"
-                  {...register(`items.${index}.description`)}
-                />
-                {errors.items?.[index]?.description && (
-                  <p className="text-xs text-destructive mt-1">
-                    {errors.items[index]?.description?.message}
-                  </p>
+            return (
+              <div key={field.id} className="border border-slate-100 rounded-lg p-3 space-y-3">
+                {/* Type toggle + description row */}
+                <div className="flex gap-2 items-start">
+                  {/* Type toggle */}
+                  <div className="flex rounded-md border border-slate-200 overflow-hidden flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setValue(`items.${index}.itemType`, "fixed")}
+                      className={cn(
+                        "flex items-center gap-1 px-2 py-1.5 text-xs font-medium transition-colors",
+                        !isPercentage
+                          ? "bg-violet-600 text-white"
+                          : "bg-white text-slate-500 hover:bg-slate-50"
+                      )}
+                    >
+                      <DollarSign className="h-3 w-3" />
+                      Fixo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setValue(`items.${index}.itemType`, "percentage")}
+                      className={cn(
+                        "flex items-center gap-1 px-2 py-1.5 text-xs font-medium transition-colors",
+                        isPercentage
+                          ? "bg-violet-600 text-white"
+                          : "bg-white text-slate-500 hover:bg-slate-50"
+                      )}
+                    >
+                      <Percent className="h-3 w-3" />
+                      %
+                    </button>
+                  </div>
+
+                  {/* Description */}
+                  <div className="flex-1">
+                    <Input
+                      placeholder="Descrição do serviço ou produto"
+                      {...register(`items.${index}.description`)}
+                    />
+                    {errors.items?.[index]?.description && (
+                      <p className="text-xs text-destructive mt-1">
+                        {errors.items[index]?.description?.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Delete */}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-10 w-10 text-slate-400 hover:text-destructive flex-shrink-0"
+                    onClick={() => remove(index)}
+                    disabled={fields.length === 1}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {/* Fixed item: qty + price */}
+                {!isPercentage && (
+                  <div className="flex gap-2 items-center">
+                    <div className="flex-1">
+                      <Label className="text-xs text-slate-500">Quantidade</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="1"
+                        {...register(`items.${index}.quantity`)}
+                        className="text-right"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <Label className="text-xs text-slate-500">Preço unitário (R$)</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="0,00"
+                        {...register(`items.${index}.unitPrice`)}
+                        className="text-right"
+                      />
+                    </div>
+                    <div className="flex-1 pt-5 text-right text-sm text-slate-500">
+                      = {formatCurrency(
+                        (Number(watchedItems?.[index]?.quantity) || 0) *
+                        (Number(watchedItems?.[index]?.unitPrice) || 0)
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Percentage item: % + label */}
+                {isPercentage && (
+                  <div className="flex gap-2 items-center">
+                    <div className="w-32">
+                      <Label className="text-xs text-slate-500">Percentual (%)</Label>
+                      <div className="relative">
+                        <Input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          max="100"
+                          placeholder="2"
+                          {...register(`items.${index}.quantity`)}
+                          className="text-right pr-7"
+                        />
+                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <Label className="text-xs text-slate-500">Sobre o quê? (ex: vendas do mês)</Label>
+                      <Input
+                        placeholder="vendas do mês, valor do contrato..."
+                        {...register(`items.${index}.percentageLabel`)}
+                      />
+                    </div>
+                  </div>
                 )}
               </div>
-              <div className="col-span-5 md:col-span-2">
-                <Input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="Qtd"
-                  {...register(`items.${index}.quantity`)}
-                  className="text-right"
-                />
-              </div>
-              <div className="col-span-6 md:col-span-3">
-                <Input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0,00"
-                  {...register(`items.${index}.unitPrice`)}
-                  className="text-right"
-                />
-              </div>
-              <div className="col-span-1 flex justify-end">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-10 w-10 text-slate-400 hover:text-destructive"
-                  onClick={() => remove(index)}
-                  disabled={fields.length === 1}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-              {/* Subtotal for this row */}
-              <div className="col-span-11 md:col-span-6 col-start-1 md:col-start-7 text-right text-sm text-slate-500 px-2">
-                Subtotal: {formatCurrency(
-                  (Number(watchedItems?.[index]?.quantity) || 0) *
-                  (Number(watchedItems?.[index]?.unitPrice) || 0)
-                )}
-              </div>
-            </div>
-          ))}
+            );
+          })}
 
           {errors.items && !Array.isArray(errors.items) && (
             <p className="text-sm text-destructive">{(errors.items as any).message}</p>
@@ -281,7 +489,7 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
             type="button"
             variant="outline"
             onClick={() =>
-              append({ description: "", quantity: 1, unitPrice: 0, order: fields.length })
+              append({ description: "", quantity: 1, unitPrice: 0, order: fields.length, itemType: "fixed" })
             }
             className="w-full border-dashed"
           >
@@ -294,7 +502,7 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
           {/* Totals */}
           <div className="space-y-2 ml-auto max-w-xs">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500">Subtotal</span>
+              <span className="text-slate-500">Subtotal (itens fixos)</span>
               <span className="font-medium">{formatCurrency(totals.subtotal)}</span>
             </div>
             <div className="flex items-center gap-4 text-sm">
@@ -347,11 +555,7 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
 
       {/* Submit */}
       <div className="flex gap-3 justify-end">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.back()}
-        >
+        <Button type="button" variant="outline" onClick={() => router.back()}>
           Cancelar
         </Button>
         <Button type="submit" disabled={loading}>

@@ -86,6 +86,9 @@ export async function PATCH(
         terms: data.terms,
         taxRate: data.taxRate,
         validUntil: data.validUntil ? new Date(data.validUntil) : null,
+        template: data.template,
+        enablePayment: data.enablePayment,
+        proposalType: data.proposalType,
         status: "DRAFT",
         items: {
           create: data.items.map((item, index) => ({
@@ -93,6 +96,8 @@ export async function PATCH(
             quantity: item.quantity,
             unitPrice: item.unitPrice,
             order: index,
+            itemType: item.itemType,
+            percentageLabel: item.percentageLabel,
           })),
         },
       },

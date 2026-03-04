@@ -36,6 +36,9 @@ export async function POST(
         terms: original.terms,
         taxRate: original.taxRate,
         validUntil: original.validUntil,
+        template: original.template,
+        enablePayment: original.enablePayment,
+        proposalType: original.proposalType,
         publicToken: nanoid(21),
         status: "DRAFT",
         items: {
@@ -44,6 +47,8 @@ export async function POST(
             quantity: item.quantity,
             unitPrice: item.unitPrice,
             order: item.order,
+            itemType: item.itemType,
+            percentageLabel: item.percentageLabel,
           })),
         },
       },

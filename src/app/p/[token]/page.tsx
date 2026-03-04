@@ -91,6 +91,7 @@ export default function PublicProposalPage({ params }: PageProps) {
   const canRespond = ["SENT", "VIEWED"].includes(proposal.status);
   const isPaid = proposal.status === "PAID";
   const isAccepted = proposal.status === "ACCEPTED";
+  const paymentEnabled = proposal.enablePayment !== false;
 
   return (
     <div className="min-h-screen bg-slate-50 py-8">
@@ -155,7 +156,7 @@ export default function PublicProposalPage({ params }: PageProps) {
           </div>
 
           {/* Payment button after accepting */}
-          {proposal.status === "ACCEPTED" && (
+          {proposal.status === "ACCEPTED" && paymentEnabled && (
             <div className="bg-violet-50 border border-violet-200 rounded-lg p-4 flex items-center justify-between flex-wrap gap-4">
               <div>
                 <p className="font-medium text-violet-900">Deseja pagar agora?</p>
@@ -179,7 +180,7 @@ export default function PublicProposalPage({ params }: PageProps) {
       )}
 
       {/* Already accepted — show pay or paid status */}
-      {isAccepted && !responded && (
+      {isAccepted && !responded && paymentEnabled && (
         <div className="max-w-4xl mx-auto px-4 mb-6 no-print space-y-3">
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
             <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />

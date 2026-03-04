@@ -40,6 +40,10 @@ model Proposal {
 
   taxRate       Float          @default(0)
 
+  template      String         @default("modern")
+  enablePayment Boolean        @default(true)
+  proposalType  String?
+
   status        String         @default("DRAFT")
   validUntil    DateTime?
   publicToken   String         @unique
@@ -60,10 +64,12 @@ model ProposalItem {
   proposalId  String
   proposal    Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
 
-  description String
-  quantity    Float    @default(1)
-  unitPrice   Float    @default(0)
-  order       Int      @default(0)
+  description      String
+  quantity         Float    @default(1)
+  unitPrice        Float    @default(0)
+  order            Int      @default(0)
+  itemType         String   @default("fixed")
+  percentageLabel  String?
 
   @@index([proposalId])
   @@map("proposal_items")
