@@ -55,7 +55,7 @@ export async function POST(_req: Request, { params }: RouteParams) {
         proposalId: proposal.id,
         publicToken: proposal.publicToken,
       },
-      success_url: `${baseUrl}/payment-success?token=${proposal.publicToken}&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${baseUrl}/payment-success?token=${proposal.publicToken}`,
       cancel_url: `${baseUrl}/p/${proposal.publicToken}`,
     });
   } catch (err: any) {
