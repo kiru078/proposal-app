@@ -40,13 +40,19 @@ const TEMPLATES = [
   {
     id: "modern",
     name: "Moderno",
-    description: "Violeta vibrante",
+    description: "Violeta + índigo",
     preview: (
-      <div className="w-full h-16 rounded overflow-hidden">
-        <div className="h-8 bg-gradient-to-r from-violet-700 to-violet-800" />
-        <div className="h-8 bg-white p-1 space-y-1">
-          <div className="h-1.5 bg-slate-200 rounded w-3/4" />
-          <div className="h-1.5 bg-slate-100 rounded w-1/2" />
+      <div className="w-full h-20 rounded-lg overflow-hidden">
+        <div className="h-12 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #6d28d9, #4f46e5)" }}>
+          <div className="absolute -top-4 -right-4 w-12 h-12 rounded-full bg-white/10" />
+          <div className="p-2">
+            <div className="h-1.5 bg-white/80 rounded w-3/4 mb-1" />
+            <div className="h-1 bg-white/40 rounded w-1/2" />
+          </div>
+        </div>
+        <div className="h-8 bg-violet-50 p-2 flex gap-2">
+          <div className="h-1.5 bg-violet-200 rounded w-1/3" />
+          <div className="h-1.5 bg-gray-200 rounded w-1/4" />
         </div>
       </div>
     ),
@@ -54,13 +60,17 @@ const TEMPLATES = [
   {
     id: "classic",
     name: "Clássico",
-    description: "Preto e branco",
+    description: "Preto + dourado",
     preview: (
-      <div className="w-full h-16 rounded overflow-hidden">
-        <div className="h-8 bg-gray-900" />
-        <div className="h-8 bg-white p-1 space-y-1">
-          <div className="h-1.5 bg-gray-200 rounded w-3/4" />
-          <div className="h-1.5 bg-gray-100 rounded w-1/2" />
+      <div className="w-full h-20 rounded-lg overflow-hidden">
+        <div className="h-12 bg-gray-950 p-2">
+          <div className="h-0.5 bg-amber-400 w-6 mb-2" />
+          <div className="h-1.5 bg-white/70 rounded w-2/3 mb-1" />
+          <div className="h-1 bg-gray-600 rounded w-1/3" />
+        </div>
+        <div className="h-8 bg-white p-2 flex gap-2">
+          <div className="h-1.5 bg-amber-200 rounded w-1/3" />
+          <div className="h-1.5 bg-gray-100 rounded w-1/4" />
         </div>
       </div>
     ),
@@ -68,14 +78,15 @@ const TEMPLATES = [
   {
     id: "minimal",
     name: "Minimalista",
-    description: "Clean e elegante",
+    description: "Branco + teal",
     preview: (
-      <div className="w-full h-16 rounded overflow-hidden border border-gray-100">
-        <div className="h-1 bg-emerald-500" />
-        <div className="h-15 bg-white p-2 space-y-1.5">
-          <div className="h-2 bg-gray-900 rounded w-1/3" />
-          <div className="h-1.5 bg-gray-200 rounded w-2/3" />
-          <div className="h-1 bg-gray-100 rounded w-1/2" />
+      <div className="w-full h-20 rounded-lg overflow-hidden border border-gray-100">
+        <div className="h-1.5 bg-teal-500" />
+        <div className="bg-white p-2 pt-2 space-y-1.5">
+          <div className="h-1 bg-teal-400 rounded w-8" />
+          <div className="h-2.5 bg-gray-900 rounded w-3/4" />
+          <div className="h-1 bg-gray-200 rounded w-1/2" />
+          <div className="h-1 bg-gray-100 rounded w-2/5" />
         </div>
       </div>
     ),
@@ -83,13 +94,56 @@ const TEMPLATES = [
   {
     id: "corporate",
     name: "Corporativo",
-    description: "Azul profissional",
+    description: "Navy + laranja",
     preview: (
-      <div className="w-full h-16 rounded overflow-hidden">
-        <div className="h-8" style={{ backgroundColor: "#1e3a5f" }} />
-        <div className="h-8 bg-white p-1 space-y-1">
-          <div className="h-1.5 rounded w-3/4" style={{ backgroundColor: "#e2e8f0" }} />
-          <div className="h-1.5 rounded w-1/2" style={{ backgroundColor: "#eff6ff" }} />
+      <div className="w-full h-20 rounded-lg overflow-hidden">
+        <div className="h-12 p-2 flex gap-2 items-start" style={{ backgroundColor: "#0f2744" }}>
+          <div className="w-0.5 h-full rounded-full" style={{ backgroundColor: "#f97316" }} />
+          <div className="flex-1">
+            <div className="h-1.5 bg-white/70 rounded w-2/3 mb-1" />
+            <div className="h-1 rounded w-1/3" style={{ backgroundColor: "rgba(249,115,22,0.5)" }} />
+          </div>
+        </div>
+        <div className="h-1 bg-orange-500" />
+        <div className="h-7 bg-white p-1 flex gap-1.5">
+          <div className="h-1.5 bg-orange-100 rounded w-1/3" />
+          <div className="h-1.5 bg-gray-100 rounded w-1/4" />
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "vivid",
+    name: "Vibrante",
+    description: "Coral + rosa",
+    preview: (
+      <div className="w-full h-20 rounded-lg overflow-hidden">
+        <div className="h-12 relative overflow-hidden p-2" style={{ background: "linear-gradient(135deg, #ef4444, #ec4899)" }}>
+          <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white/10" />
+          <div className="h-1.5 bg-white/80 rounded w-2/3 mb-1" />
+          <div className="h-1 bg-white/40 rounded w-1/2" />
+        </div>
+        <div className="h-8 p-2 flex gap-2" style={{ background: "linear-gradient(135deg, #fff1f2, #fce7f3)" }}>
+          <div className="h-1.5 rounded w-1/3" style={{ backgroundColor: "#fca5a5" }} />
+          <div className="h-1.5 bg-gray-200 rounded w-1/4" />
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "midnight",
+    name: "Midnight",
+    description: "Dark + esmeralda",
+    preview: (
+      <div className="w-full h-20 rounded-lg overflow-hidden">
+        <div className="h-12 p-2" style={{ backgroundColor: "#111827" }}>
+          <div className="h-0.5 mb-2 rounded" style={{ background: "linear-gradient(90deg, transparent, #10b981, transparent)" }} />
+          <div className="h-1.5 bg-white/70 rounded w-2/3 mb-1" />
+          <div className="h-1 bg-gray-700 rounded w-1/3" />
+        </div>
+        <div className="h-8 p-2 flex gap-2" style={{ backgroundColor: "#1a1a1a" }}>
+          <div className="h-1.5 rounded w-1/3" style={{ backgroundColor: "#065f46" }} />
+          <div className="h-1.5 rounded w-1/4" style={{ backgroundColor: "#1f2937" }} />
         </div>
       </div>
     ),
@@ -201,7 +255,7 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
           <CardTitle className="text-base">Template da Proposta</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {TEMPLATES.map((tmpl) => (
               <button
                 key={tmpl.id}

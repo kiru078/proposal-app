@@ -39,7 +39,7 @@ export default async function EditProposalPage({ params }: PageProps) {
     validUntil: proposal.validUntil
       ? new Date(proposal.validUntil).toISOString().split("T")[0]
       : undefined,
-    template: (proposal.template as any) || "modern",
+    template: (proposal.template as "modern" | "classic" | "minimal" | "corporate" | "vivid" | "midnight") || "modern",
     enablePayment: proposal.enablePayment,
     proposalType: proposal.proposalType || undefined,
     items: proposal.items.map((item) => ({

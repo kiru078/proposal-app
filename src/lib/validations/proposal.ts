@@ -24,7 +24,7 @@ export const proposalFormSchema = z.object({
   taxRate: z.coerce.number().min(0).max(100).default(0),
   validUntil: z.string().optional(),
 
-  template: z.enum(["modern", "classic", "minimal", "corporate"]).default("modern"),
+  template: z.enum(["modern", "classic", "minimal", "corporate", "vivid", "midnight"]).default("modern"),
   enablePayment: z.boolean().default(true),
   proposalType: z.string().optional(),
 
