@@ -60,6 +60,7 @@ export async function POST(req: Request) {
         template: data.template,
         enablePayment: data.enablePayment,
         proposalType: data.proposalType,
+        problems: data.problems,
         items: {
           create: data.items.map((item, index) => ({
             description: item.description,

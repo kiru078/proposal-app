@@ -86,6 +86,30 @@ export function VividTemplate({ proposal, isPublic = false }: TemplateProps) {
           </div>
         )}
 
+        {/* Diagnóstico */}
+        {proposal.problems && proposal.problems.length > 0 && (
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: "#ef4444" }} />
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Diagnóstico do Cliente</h3>
+            </div>
+            <div className="space-y-3">
+              {proposal.problems.map((item, i) => (
+                <div key={i} className="rounded-2xl overflow-hidden border border-gray-100">
+                  <div className="px-4 py-3 border-l-4 border-red-400" style={{ background: "linear-gradient(135deg, #fff1f2, #fce7f3)" }}>
+                    <p className="text-xs font-bold uppercase tracking-wider text-red-500 mb-1">Desafio</p>
+                    <p className="text-gray-700 text-sm">{item.problem}</p>
+                  </div>
+                  <div className="px-4 py-3 bg-gray-50 border-l-4 border-pink-400">
+                    <p className="text-xs font-bold uppercase tracking-wider text-pink-500 mb-1">Solução</p>
+                    <p className="text-gray-700 text-sm">{item.solution}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Itens */}
         <div>
           <div className="flex items-center gap-3 mb-4">

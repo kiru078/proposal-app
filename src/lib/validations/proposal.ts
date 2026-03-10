@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+export const problemSchema = z.object({
+  problem: z.string().min(1, "Descreva o problema"),
+  solution: z.string().min(1, "Descreva a solução"),
+});
+
 export const proposalItemSchema = z.object({
   id: z.string().optional(),
   description: z.string().min(1, "Descrição é obrigatória"),
@@ -28,6 +33,8 @@ export const proposalFormSchema = z.object({
   enablePayment: z.boolean().default(true),
   proposalType: z.string().optional(),
 
+  problems: z.array(problemSchema).default([]),
+
   items: z
     .array(proposalItemSchema)
     .min(1, "Adicione pelo menos um item à proposta"),
@@ -35,3 +42,4 @@ export const proposalFormSchema = z.object({
 
 export type ProposalFormValues = z.infer<typeof proposalFormSchema>;
 export type ProposalItemValues = z.infer<typeof proposalItemSchema>;
+export type ProblemValues = z.infer<typeof problemSchema>;

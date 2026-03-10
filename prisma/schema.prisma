@@ -43,6 +43,7 @@ model Proposal {
   template      String         @default("modern")
   enablePayment Boolean        @default(true)
   proposalType  String?
+  problems      Json           @default("[]")
 
   status        String         @default("DRAFT")
   validUntil    DateTime?

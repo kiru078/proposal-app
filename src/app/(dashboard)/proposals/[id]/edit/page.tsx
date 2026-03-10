@@ -42,6 +42,7 @@ export default async function EditProposalPage({ params }: PageProps) {
     template: (proposal.template as "modern" | "classic" | "minimal" | "corporate" | "vivid" | "midnight") || "modern",
     enablePayment: proposal.enablePayment,
     proposalType: proposal.proposalType || undefined,
+    problems: (proposal.problems as Array<{ problem: string; solution: string }>) || [],
     items: proposal.items.map((item) => ({
       id: item.id,
       description: item.description,

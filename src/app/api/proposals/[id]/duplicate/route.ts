@@ -39,6 +39,7 @@ export async function POST(
         template: original.template,
         enablePayment: original.enablePayment,
         proposalType: original.proposalType,
+        problems: original.problems ?? [],
         publicToken: nanoid(21),
         status: "DRAFT",
         items: {

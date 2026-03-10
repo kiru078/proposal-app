@@ -93,6 +93,31 @@ export function ModernTemplate({ proposal, isPublic = false }: TemplateProps) {
           </div>
         )}
 
+        {/* Diagnóstico */}
+        {proposal.problems && proposal.problems.length > 0 && (
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-px flex-1 bg-gray-100" />
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Diagnóstico do Cliente</h3>
+              <div className="h-px flex-1 bg-gray-100" />
+            </div>
+            <div className="space-y-3">
+              {proposal.problems.map((item, i) => (
+                <div key={i} className="rounded-xl overflow-hidden border border-gray-100">
+                  <div className="bg-red-50 border-l-4 border-red-400 px-4 py-3">
+                    <p className="text-xs font-bold uppercase tracking-wider text-red-500 mb-1">Desafio</p>
+                    <p className="text-gray-700 text-sm">{item.problem}</p>
+                  </div>
+                  <div className="bg-violet-50 border-l-4 border-violet-500 px-4 py-3">
+                    <p className="text-xs font-bold uppercase tracking-wider text-violet-600 mb-1">Solução</p>
+                    <p className="text-gray-700 text-sm">{item.solution}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Itens */}
         <div>
           <div className="flex items-center gap-3 mb-4">

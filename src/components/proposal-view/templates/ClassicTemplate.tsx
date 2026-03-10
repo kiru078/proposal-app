@@ -89,6 +89,30 @@ export function ClassicTemplate({ proposal, isPublic = false }: TemplateProps) {
           </div>
         )}
 
+        {/* Diagnóstico */}
+        {proposal.problems && proposal.problems.length > 0 && (
+          <div>
+            <div className="flex items-center gap-4 mb-5">
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] whitespace-nowrap">Diagnóstico do Cliente</h3>
+              <div className="h-px flex-1 bg-amber-200" />
+            </div>
+            <div className="space-y-3">
+              {proposal.problems.map((item, i) => (
+                <div key={i} className="border border-gray-100 rounded overflow-hidden">
+                  <div className="px-4 py-3 bg-red-50 border-l-4 border-red-400">
+                    <p className="text-xs font-bold uppercase tracking-wider text-red-500 mb-1">Desafio</p>
+                    <p className="text-gray-700 text-sm">{item.problem}</p>
+                  </div>
+                  <div className="px-4 py-3 bg-amber-50 border-l-4 border-amber-400">
+                    <p className="text-xs font-bold uppercase tracking-wider text-amber-600 mb-1">Solução</p>
+                    <p className="text-gray-700 text-sm">{item.solution}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Itens */}
         <div>
           <div className="flex items-center gap-4 mb-5">

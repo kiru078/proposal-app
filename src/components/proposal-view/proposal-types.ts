@@ -33,6 +33,7 @@ export interface ProposalData {
   template?: string | null;
   enablePayment?: boolean;
   proposalType?: string | null;
+  problems?: Array<{ problem: string; solution: string }> | null;
   items: ProposalItem[];
   user: Sender;
 }

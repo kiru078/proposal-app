@@ -78,6 +78,27 @@ export function MinimalTemplate({ proposal, isPublic = false }: TemplateProps) {
           <p className="text-gray-500 whitespace-pre-wrap leading-loose text-base md:text-lg font-light">{proposal.coverLetter}</p>
         )}
 
+        {/* Diagnóstico */}
+        {proposal.problems && proposal.problems.length > 0 && (
+          <div>
+            <p className="text-xs text-teal-500 uppercase tracking-[0.3em] font-bold mb-5">Diagnóstico do Cliente</p>
+            <div className="space-y-3">
+              {proposal.problems.map((item, i) => (
+                <div key={i} className="border-l-2 border-gray-100 pl-4 space-y-2">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-red-400 mb-0.5">Desafio</p>
+                    <p className="text-gray-600 text-sm">{item.problem}</p>
+                  </div>
+                  <div className="border-l-2 border-teal-300 pl-3">
+                    <p className="text-xs font-bold uppercase tracking-wider text-teal-500 mb-0.5">Solução</p>
+                    <p className="text-gray-600 text-sm">{item.solution}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Itens */}
         <div>
           <p className="text-xs text-teal-500 uppercase tracking-[0.3em] font-bold mb-5">Serviços & Produtos</p>

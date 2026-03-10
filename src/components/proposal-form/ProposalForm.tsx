@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { Plus, Trash2, Loader2, Save, CreditCard, Percent, DollarSign } from "lucide-react";
+import { Plus, Trash2, Loader2, Save, CreditCard, Percent, DollarSign, AlertCircle, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const PROPOSAL_TYPES = [
@@ -180,12 +180,14 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
       taxRate: 0,
       template: "modern",
       enablePayment: true,
+      problems: [],
       items: [{ description: "", quantity: 1, unitPrice: 0, order: 0, itemType: "fixed" }],
       ...defaultValues,
     },
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: "items" });
+  const { fields: problemFields, append: appendProblem, remove: removeProblem } = useFieldArray({ control, name: "problems" });
 
   const watchedItems = watch("items");
   const watchedTaxRate = watch("taxRate");
@@ -397,6 +399,65 @@ export function ProposalForm({ proposalId, defaultValues, senderInfo }: Proposal
               {...register("coverLetter")}
             />
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Problems & Solutions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Diagnóstico do Cliente</CardTitle>
+          <p className="text-sm text-slate-500">Liste os problemas do cliente e como você vai resolvê-los (opcional)</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {problemFields.map((field, index) => (
+            <div key={field.id} className="border border-slate-100 rounded-lg overflow-hidden">
+              <div className="bg-red-50 border-b border-slate-100 px-3 py-2.5 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-red-600">
+                    <AlertCircle className="h-3.5 w-3.5" />
+                    <span className="text-xs font-semibold uppercase tracking-wide">Problema {index + 1}</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7 text-slate-400 hover:text-destructive"
+                    onClick={() => removeProblem(index)}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+                <Textarea
+                  placeholder="Qual é o desafio ou problema do cliente?"
+                  rows={2}
+                  className="bg-white text-sm"
+                  {...register(`problems.${index}.problem`)}
+                />
+              </div>
+              <div className="bg-emerald-50 px-3 py-2.5 space-y-1.5">
+                <div className="flex items-center gap-1.5 text-emerald-600">
+                  <Lightbulb className="h-3.5 w-3.5" />
+                  <span className="text-xs font-semibold uppercase tracking-wide">Solução</span>
+                </div>
+                <Textarea
+                  placeholder="Como você vai resolver este problema?"
+                  rows={2}
+                  className="bg-white text-sm"
+                  {...register(`problems.${index}.solution`)}
+                />
+              </div>
+            </div>
+          ))}
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => appendProblem({ problem: "", solution: "" })}
+            className="w-full border-dashed"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Adicionar diagnóstico
+          </Button>
         </CardContent>
       </Card>
 

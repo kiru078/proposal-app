@@ -92,6 +92,30 @@ export function MidnightTemplate({ proposal, isPublic = false }: TemplateProps) 
           </div>
         )}
 
+        {/* Diagnóstico */}
+        {proposal.problems && proposal.problems.length > 0 && (
+          <div>
+            <div className="flex items-center gap-4 mb-4">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-emerald-400 whitespace-nowrap">Diagnóstico</h3>
+              <div className="h-px flex-1" style={{ background: "rgba(16,185,129,0.2)" }} />
+            </div>
+            <div className="space-y-3">
+              {proposal.problems.map((item, i) => (
+                <div key={i} className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="px-4 py-3" style={{ backgroundColor: "#1a1a1a", borderLeft: "3px solid #ef4444" }}>
+                    <p className="text-xs font-bold uppercase tracking-wider text-red-400 mb-1">Desafio</p>
+                    <p className="text-gray-300 text-sm">{item.problem}</p>
+                  </div>
+                  <div className="px-4 py-3" style={{ backgroundColor: "#141414", borderLeft: "3px solid #10b981" }}>
+                    <p className="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1">Solução</p>
+                    <p className="text-gray-300 text-sm">{item.solution}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Itens */}
         <div>
           <div className="flex items-center gap-4 mb-4">

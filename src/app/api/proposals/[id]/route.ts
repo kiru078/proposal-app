@@ -89,6 +89,7 @@ export async function PATCH(
         template: data.template,
         enablePayment: data.enablePayment,
         proposalType: data.proposalType,
+        problems: data.problems,
         status: "DRAFT",
         items: {
           create: data.items.map((item, index) => ({

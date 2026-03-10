@@ -94,6 +94,30 @@ export function CorporateTemplate({ proposal, isPublic = false }: TemplateProps)
           </div>
         )}
 
+        {/* Diagnóstico */}
+        {proposal.problems && proposal.problems.length > 0 && (
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <h3 className="text-xs font-bold uppercase tracking-widest whitespace-nowrap" style={{ color: "#0f2744" }}>Diagnóstico do Cliente</h3>
+              <div className="h-px flex-1" style={{ backgroundColor: "#f97316" }} />
+            </div>
+            <div className="space-y-3">
+              {proposal.problems.map((item, i) => (
+                <div key={i} className="rounded-lg overflow-hidden border border-orange-100">
+                  <div className="px-4 py-3 border-l-4 border-red-400" style={{ backgroundColor: "#fff7ed" }}>
+                    <p className="text-xs font-bold uppercase tracking-wider text-red-500 mb-1">Desafio</p>
+                    <p className="text-gray-700 text-sm">{item.problem}</p>
+                  </div>
+                  <div className="px-4 py-3 border-l-4" style={{ backgroundColor: "#f0f4f8", borderColor: "#f97316" }}>
+                    <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#f97316" }}>Solução</p>
+                    <p className="text-gray-700 text-sm">{item.solution}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Itens */}
         <div>
           <div className="flex items-center gap-3 mb-4">
