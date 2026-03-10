@@ -61,7 +61,7 @@ export function VividTemplate({ proposal, isPublic = false }: TemplateProps) {
         <div className="relative mt-4 md:mt-0 md:absolute md:bottom-8 md:right-10 md:text-right">
           <p className="text-white font-bold text-lg">{proposal.user.companyName || proposal.user.name}</p>
           {proposal.user.companyName && <p className="text-pink-200 text-sm">{proposal.user.name}</p>}
-          <p className="text-pink-300 text-xs break-all">{proposal.user.email}</p>
+          <p className="text-pink-300 text-xs break-words">{proposal.user.email}</p>
         </div>
       </div>
 
@@ -72,7 +72,7 @@ export function VividTemplate({ proposal, isPublic = false }: TemplateProps) {
             <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: "#ef4444" }}>De</p>
             <p className="font-bold text-gray-900">{proposal.user.companyName || proposal.user.name}</p>
             {proposal.user.companyName && <p className="text-gray-500 text-sm">{proposal.user.name}</p>}
-            <p className="text-gray-400 text-sm break-all">{proposal.user.email}</p>
+            <p className="text-gray-400 text-sm break-words">{proposal.user.email}</p>
             {proposal.user.phone && <p className="text-gray-400 text-sm">{proposal.user.phone}</p>}
             {proposal.user.address && <p className="text-gray-400 text-sm">{proposal.user.address}</p>}
           </div>
@@ -80,7 +80,7 @@ export function VividTemplate({ proposal, isPublic = false }: TemplateProps) {
             <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: "#ef4444" }}>Para</p>
             <p className="font-bold text-gray-900">{proposal.clientName}</p>
             {proposal.clientCompany && <p className="text-gray-500 text-sm">{proposal.clientCompany}</p>}
-            <p className="text-gray-400 text-sm break-all">{proposal.clientEmail}</p>
+            <p className="text-gray-400 text-sm break-words">{proposal.clientEmail}</p>
             {proposal.clientPhone && <p className="text-gray-400 text-sm">{proposal.clientPhone}</p>}
           </div>
         </div>

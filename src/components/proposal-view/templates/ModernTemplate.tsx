@@ -52,7 +52,7 @@ export function ModernTemplate({ proposal, isPublic = false }: TemplateProps) {
           <div className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 md:text-right">
             <p className="text-white font-bold">{proposal.user.companyName || proposal.user.name}</p>
             {proposal.user.companyName && <p className="text-violet-200 text-sm">{proposal.user.name}</p>}
-            <p className="text-violet-300 text-xs mt-1 break-all">{proposal.user.email}</p>
+            <p className="text-violet-300 text-xs mt-1 break-words">{proposal.user.email}</p>
             {proposal.user.phone && <p className="text-violet-300 text-xs">{proposal.user.phone}</p>}
           </div>
         </div>
@@ -83,14 +83,14 @@ export function ModernTemplate({ proposal, isPublic = false }: TemplateProps) {
             <p className="text-xs font-bold text-violet-500 uppercase tracking-widest mb-2">De</p>
             <p className="font-bold text-gray-900">{proposal.user.companyName || proposal.user.name}</p>
             {proposal.user.companyName && <p className="text-gray-500 text-sm">{proposal.user.name}</p>}
-            <p className="text-gray-400 text-sm break-all">{proposal.user.email}</p>
+            <p className="text-gray-400 text-sm break-words">{proposal.user.email}</p>
             {proposal.user.address && <p className="text-gray-400 text-sm">{proposal.user.address}</p>}
           </div>
           <div className="bg-violet-50 rounded-xl p-4">
             <p className="text-xs font-bold text-violet-500 uppercase tracking-widest mb-2">Para</p>
             <p className="font-bold text-gray-900">{proposal.clientName}</p>
             {proposal.clientCompany && <p className="text-gray-500 text-sm">{proposal.clientCompany}</p>}
-            <p className="text-gray-400 text-sm break-all">{proposal.clientEmail}</p>
+            <p className="text-gray-400 text-sm break-words">{proposal.clientEmail}</p>
             {proposal.clientPhone && <p className="text-gray-400 text-sm">{proposal.clientPhone}</p>}
           </div>
         </div>

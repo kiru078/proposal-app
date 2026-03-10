@@ -53,7 +53,7 @@ export function MidnightTemplate({ proposal, isPublic = false }: TemplateProps) 
           <div className="md:text-right md:border-l md:pl-8" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
             <p className="text-white font-bold text-lg">{proposal.user.companyName || proposal.user.name}</p>
             {proposal.user.companyName && <p className="text-gray-500 text-sm">{proposal.user.name}</p>}
-            <p className="text-gray-600 text-xs mt-1 break-all">{proposal.user.email}</p>
+            <p className="text-gray-600 text-xs mt-1 break-words">{proposal.user.email}</p>
             {proposal.user.phone && <p className="text-gray-600 text-xs">{proposal.user.phone}</p>}
           </div>
         </div>
@@ -87,7 +87,7 @@ export function MidnightTemplate({ proposal, isPublic = false }: TemplateProps) 
               <p className="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-2">{party.label}</p>
               <p className="font-bold text-white">{party.name}</p>
               {party.sub && <p className="text-gray-500 text-sm">{party.sub}</p>}
-              <p className="text-gray-600 text-sm break-all">{party.contact}</p>
+              <p className="text-gray-600 text-sm break-words">{party.contact}</p>
               {party.extra && <p className="text-gray-600 text-sm">{party.extra}</p>}
               {party.addr && <p className="text-gray-600 text-sm">{party.addr}</p>}
             </div>

@@ -59,7 +59,7 @@ export function MinimalTemplate({ proposal, isPublic = false }: TemplateProps) {
           <div className="md:text-right md:border-l md:border-gray-100 md:pl-10">
             <p className="font-semibold text-gray-900">{proposal.user.companyName || proposal.user.name}</p>
             {proposal.user.companyName && <p className="text-gray-400 text-sm">{proposal.user.name}</p>}
-            <p className="text-gray-300 text-xs mt-1 break-all">{proposal.user.email}</p>
+            <p className="text-gray-300 text-xs mt-1 break-words">{proposal.user.email}</p>
             {proposal.user.phone && <p className="text-gray-300 text-xs">{proposal.user.phone}</p>}
           </div>
         </div>
@@ -70,14 +70,14 @@ export function MinimalTemplate({ proposal, isPublic = false }: TemplateProps) {
             <p className="text-teal-500 text-xs uppercase tracking-[0.25em] font-bold mb-3">De</p>
             <p className="font-semibold text-gray-900">{proposal.user.companyName || proposal.user.name}</p>
             {proposal.user.companyName && <p className="text-gray-400 text-sm mt-1">{proposal.user.name}</p>}
-            <p className="text-gray-300 text-sm break-all">{proposal.user.email}</p>
+            <p className="text-gray-300 text-sm break-words">{proposal.user.email}</p>
             {proposal.user.address && <p className="text-gray-300 text-sm">{proposal.user.address}</p>}
           </div>
           <div>
             <p className="text-teal-500 text-xs uppercase tracking-[0.25em] font-bold mb-3">Para</p>
             <p className="font-semibold text-gray-900">{proposal.clientName}</p>
             {proposal.clientCompany && <p className="text-gray-400 text-sm mt-1">{proposal.clientCompany}</p>}
-            <p className="text-gray-300 text-sm break-all">{proposal.clientEmail}</p>
+            <p className="text-gray-300 text-sm break-words">{proposal.clientEmail}</p>
             {proposal.clientPhone && <p className="text-gray-300 text-sm">{proposal.clientPhone}</p>}
           </div>
         </div>
